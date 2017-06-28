@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour {
         {
             for (int l = 0; l < 5; l++)
             {
-                Instantiate(Squirrel, new Vector3(l, y, -0.1f), Quaternion.identity);
+                Spawn("Squirrel", l, y);
             }
         }
     }
@@ -36,4 +36,15 @@ public class GameController : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void Spawn(string animal, float x, float y)
+    {
+        switch (animal) {
+            case "Squirrel":
+                Instantiate(Squirrel, new Vector3(x, y, -0.1f), Quaternion.identity);
+                break;
+            default:
+                break;
+    }
+    }
 }
