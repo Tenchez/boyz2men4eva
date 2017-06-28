@@ -27,7 +27,7 @@ public class Animal : Living {
     //standard state change factors - for when doing nothing
     private int HealthChangeFactorStandard = 1;
     private int EnergyChangeFactorStandard;
-    private float normalDetectionRange = 50; //placeholder value - is this in pixels...?
+    private float normalDetectionRange = 3; //placeholder value - is this in pixels...?
     
     // Values for live and health
     public int Health { get; set; }
