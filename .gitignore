@@ -34,4 +34,14 @@ sysinfo.txt
 *.unitypackage
 src/Temp/UnityLockfile
 src/Library/CrashedAssetImports.txt
+<<<<<<< HEAD
 src/Library/shadercompiler-UnityShaderCompiler.exe0.log
+=======
+/src/Temp
+src/Library/assetDatabase3
+src/Library/Collab/CollabSnapshot_bd580e19-eb10-41b3-93fc-6fdc32baea98.txt
+src/Library/metadata/07/076890b57a58a634d97b97c4e3c99751
+src/Library/metadata/da/dafa8deed71da43438a23c63a86df23d
+src/Library/ScriptAssemblies/Assembly-CSharp.dll
+src/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb
+>>>>>>> fcb3806be728879e847a7286d9c5d83cd447213a
