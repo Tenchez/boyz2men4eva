@@ -344,4 +344,4 @@ public class Animal : Living {
 //            GC.Spawn("Squirrel", this.gameObject.transform.position.x, this.gameObject.transform.position.x);
 //        }
 //    }
-//}
+}
