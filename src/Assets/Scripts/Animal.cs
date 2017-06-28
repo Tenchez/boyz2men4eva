@@ -5,6 +5,7 @@ using UnityEngine;
 public class Animal : MonoBehaviour, ILiving {
     // GameObjects
     SimulationEntityController SEC;
+    GameController GC;
 
     // If you are chasing, whether it is a food or a plant, we alias it here to keep track of?
     public GameObject target;
@@ -47,6 +48,7 @@ public class Animal : MonoBehaviour, ILiving {
 	// Use this for initialization
 	void Start ()
     {
+        GC = GameObject.Find("_GameController").GetComponent<GameController>();
         SEC = GameObject.Find("_SimulationEntityController").GetComponent<SimulationEntityController>();
         SEC.Animals.Add(this.gameObject);
 
@@ -168,7 +170,16 @@ public class Animal : MonoBehaviour, ILiving {
     #region movement
     public void Wander()
     {
-        this.gameObject.transform.position = new Vector3(this.gameObject.transform.position.x + this.Traits[2]/35f, 0, this.gameObject.transform.position.z + this.Traits[2]/35f);
+        //walks the way it is looking
+        this.gameObject.transform.Translate(Heading * this.Traits[2] / 20f, Space.World);
+        if (OutsideBounderies(((this.gameObject.transform.position + ((Quaternion.AngleAxis(sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).x), ((this.gameObject.transform.position + ((Quaternion.AngleAxis(sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).y)))
+        {
+            Turn(0);
+        }
+        else if (OutsideBounderies(((this.gameObject.transform.position + ((Quaternion.AngleAxis(-sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).x), ((this.gameObject.transform.position + ((Quaternion.AngleAxis(-sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).y)))
+        {
+            Turn(1);
+        }
     }
     #endregion
 
@@ -279,5 +290,27 @@ public class Animal : MonoBehaviour, ILiving {
         }
 
         return ToReturn;
+    }
+
+    private void Turn(int dir)
+    {
+        if (dir == 0)
+        {
+            Heading = Quaternion.AngleAxis(-2f, Vector3.forward) * Heading;
+        }
+        else if (dir == 1)
+        {
+            Heading = Quaternion.AngleAxis(2f, Vector3.forward) * Heading;
+        }
+    }
+
+    private bool OutsideBounderies(float x, float y)
+    {
+        bool yes = false;
+        if (x > ((GC.WIDTH - 3) / 2) || x < (-(GC.WIDTH + 3) / 2) || y > ((GC.HEIGHT - 3) / 2) || y < (-(GC.HEIGHT + 3) / 2))
+        {
+            yes = true;
+        }
+        return yes;
     }
 }

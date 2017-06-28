@@ -33,3 +33,5 @@ sysinfo.txt
 *.apk
 *.unitypackage
 src/Temp/UnityLockfile
+src/Library/CrashedAssetImports.txt
+/src/Temp
