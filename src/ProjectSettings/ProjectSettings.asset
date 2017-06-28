@@ -4,14 +4,14 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  productGUID: cd1eb405cc00d6245ac2f90ef681fec5
+  productGUID: 41f1fee3a7aa90a458e58ec6cea46e56
   AndroidProfiler: 0
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: boyz2men4eva
+  productName: The Boys, Who are Back in Town
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21176471, a: 1}
@@ -509,14 +509,14 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: boyz2men4eva
+  metroPackageName: The Boys, Who are Back in Town
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: boyz2men4eva
+  metroApplicationDescription: The Boys, Who are Back in Town
   wsaImages: {}
   metroTileShortName: 
   metroCommandLineArgsFile: 
@@ -587,11 +587,13 @@ PlayerSettings:
     daydream:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Collab: 1
+    UNet: 1
   facebookSdkVersion: 7.9.1
   apiCompatibilityLevel: 2
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  cloudProjectId: bd580e19-eb10-41b3-93fc-6fdc32baea98
+  projectName: The Boys, Who are Back in Town
+  organizationId: mrlordmr
   cloudEnabled: 0
   enableNewInputSystem: 0
