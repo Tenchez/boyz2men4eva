@@ -5,7 +5,8 @@ using UnityEngine;
 public class GameController : MonoBehaviour {
 
 	public int HEIGHT = 30;
-	public int WIDTH = 50;
+    public Transform Squirrel;
+    public int WIDTH = 50;
 	float BLOCK_SIZE = 1.0f;
 
 	// Use this for initialization
@@ -20,9 +21,16 @@ public class GameController : MonoBehaviour {
 				var x = Resources.Load<Sprite>("Images/bgd");
 				renderer.sprite = Resources.Load<Sprite>("Images/bgd");
                 bCube.transform.eulerAngles = new Vector3(0, 0, 0);
-			}
+            }
 		}
-	}
+        for (int y = 0; y < 1; y++)
+        {
+            for (int l = 0; l < 5; l++)
+            {
+                Instantiate(Squirrel, new Vector3(l, y, -0.1f), Quaternion.identity);
+            }
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
