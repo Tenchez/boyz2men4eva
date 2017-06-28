@@ -34,3 +34,4 @@ sysinfo.txt
 *.unitypackage
 src/Temp/UnityLockfile
 src/Library/CrashedAssetImports.txt
+src/Library/shadercompiler-UnityShaderCompiler.exe0.log
