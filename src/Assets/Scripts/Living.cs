@@ -5,6 +5,8 @@ public abstract class Living : MonoBehaviour, ILiving
 {
     public int Energy;
 
+    public int[] Traits;
+
     // Use this for initialization
     public abstract void Start();
 
@@ -18,4 +20,30 @@ public abstract class Living : MonoBehaviour, ILiving
     public abstract void Reproduce();
 
     public abstract void EnergyTick();
+
+    public bool isSameSpecies(ILiving other)
+    {
+        Living creature = (Living)other;
+
+        bool same;
+
+        if (creature.getType() == getType())
+        {
+            same = false;
+        }
+        else
+        {
+            same = true;
+
+            for (int i = 0; i < this.Traits.Length; i++)
+            {
+                if (this.Traits[i] != creature.Traits[i])
+                {
+                    same = false;
+                }
+            }
+        }
+
+        return same;
+    }
 }

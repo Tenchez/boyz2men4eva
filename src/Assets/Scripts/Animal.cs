@@ -12,7 +12,7 @@ public class Animal : Living {
 
     // The array that is it's statline, an array of ints for ease of mutation
     // Sise, Strength, Speed, Age, Diet
-    public int[] Traits = new int[5];
+    public new int[] Traits = new int[5];
 
     //fully rested
     private readonly int EXHAUSTION_THRESHOLD = 50;
