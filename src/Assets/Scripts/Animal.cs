@@ -201,63 +201,83 @@ public class Animal : MonoBehaviour, ILiving {
 
     public bool CanSee(GameObject thing)
     {
-        bool canSee = false;
+        bool IsSeen = false;
         if (Vector2.Distance(thing.transform.position, this.gameObject.transform.position) < sightRadius && (Vector3.Angle(Heading, (thing.transform.position - this.gameObject.transform.position)) < sightAngle))
         {
-            canSee = true;
+            IsSeen = true;
         }
 
-        return canSee;
+        return IsSeen;
+    }
+
+    public List<GameObject> AllYouCanSee()
+    {
+        List<GameObject> InSight = new List<GameObject>();
+
+        foreach (GameObject LivingThing in SEC.AllLiving)
+        {
+            if (CanSee(LivingThing))
+            {
+                InSight.Add(LivingThing);
+            }
+        }
+
+        return InSight;
     }
 
     //returns null if no edible objects are in view range
-    private GameObject findEdible()
+    private GameObject FindEdible()
     {
-        GameObject toReturn = null;
+        GameObject ToReturn = null;
 
-        string desired;
+        List<GameObject> InSight = AllYouCanSee();
+        List<GameObject> InSightAndEdible = new List<GameObject>();
+
+        string Desired;
 
         switch (Traits[4])
         {
             case 1:
-                desired = "Plant";
+                Desired = "Plant";
 
                 break;
             case 2:
-                desired = "Both";
+                Desired = "Both";
 
                 break;
             case 3:
-                desired = "Animal";
+                Desired = "Animal";
 
                 break;
             default:
-                throw new System.Exception("Diet not found: Animal.findedible()");
+                throw new System.Exception("Diet not found: Animal.FindEdible()");
                 break;
         }
 
-        foreach (GameObject food in SEC.AllLiving)
+        foreach (GameObject food in InSight)
         {
-
-            // If nearby
-            if (Vector3.Distance(this.gameObject.transform.position, food.transform.position) < sightRadius)
+            if (Desired == "Both" || food.GetComponentInChildren<ILiving>().getType() == Desired)
             {
-                List<GameObject> InSight;// = METHOD();
-/*
-                foreach (GameObject edible in InSight)
-                {
-                    if (desired.Equals("Both") || food.GetComponentInChildren<ILiving>().getType().Equals(desired))
-                    {
-                        if (toReturn == null || Vector3.Distance(this.gameObject.transform.position, food.transform.position) < Vector3.Distance(this.gameObject.transform.position, toReturn.transform.position))
-                        {
-                            toReturn = food;
-                        }
-                    }
-                }
-                */
+                InSightAndEdible.Add(food);
             }
         }
 
-        return toReturn;
+        if (InSightAndEdible.Count > 0)
+        {
+            ToReturn = InSightAndEdible[0];
+        }
+
+        for (int i = 1; i < InSightAndEdible.Count; i++)
+        {
+            GameObject You = this.gameObject;
+            GameObject Target = ToReturn;
+            GameObject Test = InSightAndEdible[i];
+            if (Vector3.Distance(You.transform.position, Target.transform.position) > Vector3.Distance(You.transform.position, Test.transform.position))
+            {
+                ToReturn = InSightAndEdible[i];
+            }
+        }
+
+        return ToReturn;
     }
 }
