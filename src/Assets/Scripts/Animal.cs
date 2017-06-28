@@ -9,6 +9,8 @@ public class Animal : Living {
 
     // If you are chasing, whether it is a food or a plant, we alias it here to keep track of?
     public GameObject target;
+    public GameObject pursuer;
+    public GameObject mate;
 
     // The array that is it's statline, an array of ints for ease of mutation
     // Sise, Strength, Speed, Age, Diet
@@ -315,4 +317,31 @@ public class Animal : Living {
         }
         return yes;
     }
-}
+
+//    private GameObject LocateMate()
+//    {
+//        GameObject CloseMate = null;
+//
+//        List<GameObject> NearByLivingThings = AllYouCanSee();
+//
+//        foreach (GameObject PotentialMate in NearByLivingThings)
+//        {
+//            if (IsSameSpecies(PotentialMate))
+//            {
+//                CloseMate = PotentialMate;
+//            }
+//        }
+//
+//        return CloseMate;
+//    }
+//
+//    private void Mate()
+//    {
+//        if (Vector3.Distance(this.transform.position, mate.transform.position) < 5)
+//        {
+//            mate.GetComponentInChildren<Animal>().Energy /= 2;
+//            Energy /= 2;
+//            GC.Spawn("Squirrel", this.gameObject.transform.position.x, this.gameObject.transform.position.x);
+//        }
+//    }
+//}
