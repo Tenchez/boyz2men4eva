@@ -13,6 +13,9 @@ public class Animal : Living {
     // The array that is it's statline, an array of ints for ease of mutation
     // Size, Strength, Speed, Age, Diet
 
+    //this is done because there will be no pre-fabs for predators
+    public new string SpeciesName = "Predator";
+
     //fully rested
     private readonly int EXHAUSTION_THRESHOLD = 50;
 
