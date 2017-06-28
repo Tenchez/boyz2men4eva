@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dafa8deed71da43438a23c63a86df23d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Energy: 0
   target: {fileID: 0}
-  Traits: 
+  Traits: 0100000003000000030000000300000001000000
   State: 2

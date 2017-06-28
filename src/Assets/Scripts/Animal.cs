@@ -27,7 +27,7 @@ public class Animal : Living {
     //standard state change factors - for when doing nothing
     private int HealthChangeFactorStandard = 1;
     private int EnergyChangeFactorStandard;
-    private float normalDetectionRange = 50; //placeholder value - is this in pixels...?
+    private float normalDetectionRange = 3; //placeholder value - is this in pixels...?
     
     // Values for live and health
     public int Health { get; set; }
@@ -52,10 +52,10 @@ public class Animal : Living {
         GC = GameObject.Find("_GameController").GetComponent<GameController>();
         SEC = GameObject.Find("_SimulationEntityController").GetComponent<SimulationEntityController>();
         SEC.Animals.Add(this.gameObject);
-
-        //Alive = true;
+        Heading = new Vector3(1, 1, 0);
+        Alive = true;
         //Exhaustion = EXHAUSTION_THRESHOLD;
-        //Health = HEALTH_THRESHOLD;
+        Health = HEALTH_THRESHOLD;
         //EnergyChangeFactorStandard = Traits[0];
     }
 
@@ -68,7 +68,7 @@ public class Animal : Living {
             EnergyTick();
             HealthTick();
             ExhaustionTick();
-
+            Wander();
             if (Health == 0)
             {
                 Alive = false;

@@ -201,6 +201,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 076890b57a58a634d97b97c4e3c99751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HEIGHT: 30
+  Squirrel: {fileID: 4008029687004420, guid: 5f245ee5b13c29c45997a8a1bf2ae6db, type: 2}
+  WIDTH: 50
 --- !u!1 &1019930094
 GameObject:
   m_ObjectHideFlags: 0
