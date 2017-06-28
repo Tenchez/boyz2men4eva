@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Animal : MonoBehaviour, ILiving {
+public class Animal : Living {
     // GameObjects
     SimulationEntityController SEC;
     GameController GC;
@@ -44,22 +44,23 @@ public class Animal : MonoBehaviour, ILiving {
     public float sightAngle { get; set; }
     public float sightRadius { get; set; }
     public States State;
-
-	// Use this for initialization
-	void Start ()
+    
+    #region LivingMethods
+    // Use this for initialization
+    public override void Start()
     {
         GC = GameObject.Find("_GameController").GetComponent<GameController>();
         SEC = GameObject.Find("_SimulationEntityController").GetComponent<SimulationEntityController>();
         SEC.Animals.Add(this.gameObject);
 
-    //Alive = true;
-    //Exhaustion = EXHAUSTION_THRESHOLD;
-    //Health = HEALTH_THRESHOLD;
-    //EnergyChangeFactorStandard = Traits[0];
-}
-	
-	// Update is called once per frame
-	void Update ()
+        //Alive = true;
+        //Exhaustion = EXHAUSTION_THRESHOLD;
+        //Health = HEALTH_THRESHOLD;
+        //EnergyChangeFactorStandard = Traits[0];
+    }
+
+    // Update is called once per frame
+    public override void Update()
     {
         if (Alive)
         {
@@ -99,29 +100,35 @@ public class Animal : MonoBehaviour, ILiving {
         }
     }
 
-    // Called to eat food (plants or animals)
-    public void Consume()
+    // Ca1lled to eat food (plants or animals)
+    public override void Consume()
     {
 
     }
 
     // Called to reproduce sexually
-    public void Reproduce()
+    public override void Reproduce()
     {
 
     }
+
+    public override void EnergyTick()
+    {
+        //placeholder
+        Energy -= EnergyChangeFactor;
+    }
+
+    public override string getType()
+    {
+        return "Animal";
+    }
+    #endregion
 
     public void MoveTowards(Vector3 position, float pace)
     {
         Heading = position - this.transform.position;
         Heading.Normalize();
         this.gameObject.transform.Translate(Heading * Traits[2] * pace / 50f, Space.World);
-    }
-
-    public void EnergyTick()
-    {
-        //placeholder
-        Energy -= EnergyChangeFactor;
     }
 
     public void HealthTick()
@@ -203,11 +210,6 @@ public class Animal : MonoBehaviour, ILiving {
             EnergyChangeFactor = EnergyChangeFactorStandard / 2; //slow energy burn while asleep
             HealthChangeFactor = HealthChangeFactorStandard * 2; //heal fast while asleep
         }
-    }
-
-    public string getType()
-    {
-        return "Animal";
     }
 
     public bool CanSee(GameObject thing)
