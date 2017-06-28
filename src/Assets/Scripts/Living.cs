@@ -5,6 +5,8 @@ public abstract class Living : MonoBehaviour, ILiving
 {
     public int Energy;
 
+    public string SpeciesName;
+
     public int[] Traits;
 
     // Use this for initialization

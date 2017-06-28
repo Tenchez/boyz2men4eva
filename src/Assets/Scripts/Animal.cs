@@ -16,6 +16,9 @@ public class Animal : Living {
     // Sise, Strength, Speed, Age, Diet
     public new int[] Traits = new int[5];
 
+    //this is done because there will be no pre-fabs for predators
+    public new string SpeciesName = "Predator";
+
     //fully rested
     private readonly int EXHAUSTION_THRESHOLD = 50;
 
