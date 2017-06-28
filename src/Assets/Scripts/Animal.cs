@@ -32,7 +32,7 @@ public class Animal : Living {
     // Values for live and health
     public int Health { get; set; }
     public int Exhaustion { get; set; }
-    public int Energy { get; set; }
+    public new int Energy { get; set; }
     public bool Alive { get; set; }
     public bool Asleep { get; set; }
     // public int Thirst;

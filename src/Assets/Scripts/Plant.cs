@@ -14,7 +14,7 @@ public class Plant : Living
     // RegrowthRate
     public int[] Traits = new int[1];
 
-    public int Energy { get; set; }
+    public new int Energy { get; set; }
 
     // Use this for initialization
     public override void Start()
