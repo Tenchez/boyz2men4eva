@@ -5,7 +5,7 @@ public abstract class Living : MonoBehaviour, ILiving
 {
     public int Energy;
 
-    public int[] Traits;
+    public int[] Traits = new int[5];
 
     // Use this for initialization
     public abstract void Start();

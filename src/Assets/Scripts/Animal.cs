@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Animal : Living {
     // GameObjects
     SimulationEntityController SEC;
     GameController GC;
+    static System.Random r = new System.Random();
 
     // If you are chasing, whether it is a food or a plant, we alias it here to keep track of?
     public GameObject target;
 
     // The array that is it's statline, an array of ints for ease of mutation
-    // Sise, Strength, Speed, Age, Diet
-    public new int[] Traits = new int[5];
+    // Size, Strength, Speed, Age, Diet
 
     //fully rested
     private readonly int EXHAUSTION_THRESHOLD = 50;
@@ -32,7 +31,6 @@ public class Animal : Living {
     // Values for live and health
     public int Health { get; set; }
     public int Exhaustion { get; set; }
-    public new int Energy { get; set; }
     public bool Alive { get; set; }
     public bool Asleep { get; set; }
     // public int Thirst;
@@ -178,7 +176,14 @@ public class Animal : Living {
     public void Wander()
     {
         //walks the way it is looking
-        this.gameObject.transform.Translate(Heading * this.Traits[2] / 20f, Space.World);
+        this.gameObject.transform.Translate(Heading * this.Traits[2] / 35f, Space.World);
+        if (r.Next(10) < 4)
+        {
+            for(int j = 0; j < 3; j++)
+            {
+                Turn(r.Next(2));
+            }
+        }
         if (OutsideBounderies(((this.gameObject.transform.position + ((Quaternion.AngleAxis(sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).x), ((this.gameObject.transform.position + ((Quaternion.AngleAxis(sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).y)))
         {
             Turn(0);

@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour {
 
 	public int HEIGHT = 30;
     public Transform Squirrel;
+    public Transform Bear;
     public int WIDTH = 50;
 	float BLOCK_SIZE = 1.0f;
 
@@ -30,6 +31,7 @@ public class GameController : MonoBehaviour {
                 Spawn("Squirrel", l, y);
             }
         }
+        Spawn("Bear", 10, 10);
     }
 	
 	// Update is called once per frame
@@ -42,6 +44,9 @@ public class GameController : MonoBehaviour {
         switch (animal) {
             case "Squirrel":
                 Instantiate(Squirrel, new Vector3(x, y, -0.1f), Quaternion.identity);
+                break;
+            case "Bear":
+                Instantiate(Bear, new Vector3(x, y, -0.1f), Quaternion.identity);
                 break;
             default:
                 break;
