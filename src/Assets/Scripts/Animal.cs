@@ -313,26 +313,4 @@ public class Animal : MonoBehaviour, ILiving {
         }
         return yes;
     }
-
-    private void Turn(int dir)
-    {
-        if (dir == 0)
-        {
-            Heading = Quaternion.AngleAxis(-2f, Vector3.forward) * Heading;
-        }
-        else if (dir == 1)
-        {
-            Heading = Quaternion.AngleAxis(2f, Vector3.forward) * Heading;
-        }
-    }
-
-    private bool OutsideBounderies(float x, float y)
-    {
-        bool yes = false;
-        if (x > ((GC.WIDTH - 3) / 2) || x < (-(GC.WIDTH + 3) / 2) || y > ((GC.HEIGHT - 3) / 2) || y < (-(GC.HEIGHT + 3) / 2))
-        {
-            yes = true;
-        }
-        return yes;
-    }
 }
