@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
-	int HEIGHT = 30;
-	int WIDTH = 50;
+	public int HEIGHT = 30;
+	public int WIDTH = 50;
 	float BLOCK_SIZE = 1.0f;
 
 	// Use this for initialization
