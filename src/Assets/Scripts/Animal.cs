@@ -19,10 +19,10 @@ public class Animal : Living {
     // Size, Strength, Speed, Age, Diet
 
     //this is done because there will be no pre-fabs for predators
-    public new string SpeciesName = "Predator";
+    //public new string SpeciesName = "Predator";
 
     //fully rested
-    private readonly int EXHAUSTION_THRESHOLD = 50;
+    private readonly int EXHAUSTION_THRESHOLD = 100;
 
     //underfed
     private readonly int ENERGY_DANGER_LEVEL = 150;
@@ -47,7 +47,7 @@ public class Animal : Living {
     // Values for live and health
     public int Health { get; set; }
     public int Exhaustion { get; set; }
-    public new int Energy { get; set; }
+    //public new int Energy { get; set; }
     // public int Thirst;
     // public bool CanSwim;
 
@@ -67,7 +67,7 @@ public class Animal : Living {
         Heading = new Vector3(1, 1, 0);
 
         //initial value
-        Energy = EXHAUSTION_THRESHOLD * 50;
+        Energy = EXHAUSTION_THRESHOLD * 10;
 
         sightRadius = 360;
 
@@ -89,10 +89,11 @@ public class Animal : Living {
         else
         {
             //dont alway remove - the carcass should remain in the simulation to be eaten
-            if (Energy == 0)
+            if (Energy <= 0)
             {
-                SEC.Animals.Remove(this.transform.gameObject);
+                SEC.remove(this);
                 Destroy(this);
+                Destroy(this.gameObject);
             }
         }
 
@@ -110,6 +111,7 @@ public class Animal : Living {
                 {
 
                     target = food;
+                    State = States.Chasing;
                 }
                 break;
             case States.Chasing:
@@ -145,7 +147,7 @@ public class Animal : Living {
 
     public void AttackTarget(GameObject victim)
     {
-        victim.GetComponentInChildren<Animal>().Health = 0;
+        victim.GetComponentInChildren<Animal>().Health = -20;
     }
 
     public bool IsTargetWithinInteractRange()
@@ -187,7 +189,7 @@ public class Animal : Living {
         {
             target = null;
         }
-        if (Health < 0 || Energy < 0)
+        if (Health <= 0 || Energy <= 0)
         {
             State = States.Dead;
         }
@@ -270,7 +272,10 @@ public class Animal : Living {
     public override void Consume()
     {
         this.Energy += target.GetComponentInChildren<Living>().Energy;
-        target.GetComponentInChildren<Living>().Energy = 0;
+        target.GetComponentInChildren<Living>().Energy = -30;
+        //SEC.remove(target.GetComponentInChildren<ILiving>());
+        //Destroy(target);
+        //Destroy(target.GetComponentInChildren<Living>());
     }
 
     // Called to reproduce sexually
@@ -324,7 +329,7 @@ public class Animal : Living {
         else
         {
             //continue sleeping - placeholder
-            Exhaustion++;
+            Exhaustion += 2;
 
             sightRadius = normalDetectionRange / 3;
 
@@ -373,7 +378,7 @@ public class Animal : Living {
 
         foreach (GameObject LivingThing in SEC.AllLiving)
         {
-            if (CanSee(LivingThing))
+            if (CanSee(LivingThing) && LivingThing != this.gameObject)
             {
                 InSight.Add(LivingThing);
             }

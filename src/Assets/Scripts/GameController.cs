@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour {
                 Spawn("Squirrel", l, y);
             }
         }
-        Spawn("Bear", 10, 10);
+        Spawn("Bear", 0, 0);
     }
 	
 	// Update is called once per frame
@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour {
     {
         switch (animal) {
             case "Squirrel":
-                //Instantiate(Squirrel, new Vector3(x, y, -0.1f), Quaternion.identity);
+                Instantiate(Squirrel, new Vector3(x, y, -0.1f), Quaternion.identity);
                 break;
             case "Bear":
                 Instantiate(Bear, new Vector3(x, y, -0.1f), Quaternion.identity);
