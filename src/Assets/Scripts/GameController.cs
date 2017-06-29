@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour {
 		}
         for (int y = 0; y < 1; y++)
         {
-            for (int l = 0; l < 1; l++)
+            for (int l = 0; l < 5; l++)
             {
                 Spawn("Squirrel", l, y);
             }
