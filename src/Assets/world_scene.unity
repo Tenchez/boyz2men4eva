@@ -203,6 +203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HEIGHT: 30
   Squirrel: {fileID: 4008029687004420, guid: 5f245ee5b13c29c45997a8a1bf2ae6db, type: 2}
+  Bear: {fileID: 4596206754088004, guid: b311b0ecf7e537841b2ea47733d9c5d1, type: 2}
   WIDTH: 50
 --- !u!1 &1019930094
 GameObject:
