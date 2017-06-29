@@ -93,7 +93,9 @@ public class Plant : Living
         }
         else
         {
-            //remove this plant from game
+            SEC.remove(this);
+            Destroy(gameObject);
+            Destroy(this);
         }
     }
 
