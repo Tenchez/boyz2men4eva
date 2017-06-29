@@ -142,10 +142,12 @@ public class Animal : Living {
                 break;
             case States.Eating:
                 Consume();
-                if (target.GetComponentInChildren<Living>().Energy <= 0)
+
+                if (target != null && target.GetComponentInChildren<Living>().Energy <= 0)
                 {
                     target = null;
                 }
+
                 break;
             case States.Fleeing:
                 Flee(2);
