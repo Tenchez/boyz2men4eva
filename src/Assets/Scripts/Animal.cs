@@ -38,6 +38,7 @@ public class Animal : Living {
     //used to change rates when sleeping or running etc
     private int HealthChangeFactor = 1;
     private int EnergyChangeFactor = 1;
+    private int EatSpeed = 5;
 
     //standard state change factors - for when doing nothing
     private int HealthChangeFactorStandard = 1;
@@ -47,7 +48,6 @@ public class Animal : Living {
     // Values for live and health
     public int Health { get; set; }
     public int Exhaustion { get; set; }
-    //public new int Energy { get; set; }
     // public int Thirst;
     // public bool CanSwim;
 
@@ -69,7 +69,9 @@ public class Animal : Living {
         //initial value
         Energy = EXHAUSTION_THRESHOLD * 10;
 
-        sightRadius = 360;
+        EatSpeed = 5 * Traits[6];
+
+        sightAngle = 180;
 
         Exhaustion = EXHAUSTION_THRESHOLD;
         Health = HEALTH_THRESHOLD;
@@ -102,6 +104,8 @@ public class Animal : Living {
             case States.Sleeping:
                 break;
             case States.Grazing:
+                pursuer = null;
+
                 GameObject food = FindEdible();
                 if (food == null)
                 {
@@ -147,7 +151,7 @@ public class Animal : Living {
 
     public void AttackTarget(GameObject victim)
     {
-        victim.GetComponentInChildren<Animal>().Health = -20;
+        victim.GetComponentInChildren<Animal>().Health = -1;
     }
 
     public bool IsTargetWithinInteractRange()
@@ -185,7 +189,7 @@ public class Animal : Living {
         List<GameObject> nearbyThings = AllYouCanSee();
         bool inEatingRange = IsTargetWithinInteractRange();
         bool isEatable = IsTargetEdible();
-        if (State != States.Chasing) //or mating
+        if (State != States.Chasing && State != States.Eating) //or mating
         {
             target = null;
         }
@@ -271,11 +275,16 @@ public class Animal : Living {
     // Ca1lled to eat food (plants or animals)
     public override void Consume()
     {
-        this.Energy += target.GetComponentInChildren<Living>().Energy;
-        target.GetComponentInChildren<Living>().Energy = -30;
-        //SEC.remove(target.GetComponentInChildren<ILiving>());
-        //Destroy(target);
-        //Destroy(target.GetComponentInChildren<Living>());
+        if (target.GetComponentInChildren<Living>().Energy < EatSpeed)
+        {
+            this.Energy += target.GetComponentInChildren<Living>().Energy;
+            target.GetComponentInChildren<Living>().Energy = 0;
+        }
+        else
+        {
+            this.Energy += EatSpeed;
+            target.GetComponentInChildren<Living>().Energy -= EatSpeed;
+        }
     }
 
     // Called to reproduce sexually
