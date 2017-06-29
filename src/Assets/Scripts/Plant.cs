@@ -20,7 +20,8 @@ public class Plant : Living
     public override void Start()
     {
         SEC = GameObject.Find("_SimulationEntityController").GetComponent<SimulationEntityController>();
-        SEC.Plants.Add(this.gameObject);
+        SEC.Plants.Add(gameObject);
+        GC = GameObject.Find("_GameController").GetComponent<GameController>();
     }
 
     // Update is called once per frame
