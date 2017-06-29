@@ -25,6 +25,8 @@ public class GameController : MonoBehaviour {
                 bCube.transform.eulerAngles = new Vector3(0, 0, 0);
             }
 		}
+
+        /*
         for (int y = 0; y < 1; y++)
         {
             for (int l = 0; l < 5; l++)
@@ -33,8 +35,11 @@ public class GameController : MonoBehaviour {
             }
         }
         Spawn("Bear", 0, 0);
-        Spawn("Bear", -2, 2);
-    }
+        Spawn("Bear", -2, 2);*/
+
+        Spawn("Squirrel", 0, 0);
+	    Spawn("Fern", 10, 10);
+	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -51,7 +56,7 @@ public class GameController : MonoBehaviour {
                 Instantiate(Bear, new Vector3(x, y, -0.1f), Quaternion.identity);
                 break;
             case "Fern":
-                Instantiate(Bear, new Vector3(x, y, -0.1f), Quaternion.identity);
+                Instantiate(Fern, new Vector3(x, y, -0.1f), Quaternion.identity);
                 break;
             default:
                 break;
