@@ -21,7 +21,15 @@ public class SimulationEntityController : MonoBehaviour {
     private void UpdateAll()
     {
         AllLiving.Clear();
-        AllLiving.AddRange(Plants);
-        AllLiving.AddRange(Animals);
+
+        foreach (GameObject x in Plants)
+        {
+            AllLiving.Add(x);
+        }
+
+        foreach (GameObject x in Animals)
+        {
+            AllLiving.Add(x);
+        }
     }
 }
