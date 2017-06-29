@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-=======
 ﻿using System.Collections.Generic;
->>>>>>> 5955196f6276a1a46e8cb62cb3b4653abf57d34a
 using UnityEngine;
 
 public class Animal : Living {
@@ -19,6 +16,7 @@ public class Animal : Living {
     public GameObject pursuer;
 
     // The array that is it's statline, an array of ints for ease of mutation
+    // Size, Strength, Speed, Age, Diet
 
     //this is done because there will be no pre-fabs for predators
     public new string SpeciesName = "Predator";
@@ -44,12 +42,9 @@ public class Animal : Living {
     // Values for live and health
     public int Health { get; set; }
     public int Exhaustion { get; set; }
-<<<<<<< HEAD
     public new int Energy { get; set; }
-=======
     public bool Alive { get; set; }
     public bool Asleep { get; set; }
->>>>>>> 5955196f6276a1a46e8cb62cb3b4653abf57d34a
     // public int Thirst;
     // public bool CanSwim;
 
@@ -326,7 +321,6 @@ public class Animal : Living {
     public void Wander()
     {
         //walks the way it is looking
-        this.gameObject.transform.Translate(Heading * this.Traits[2] / 20f, Space.World);
         this.gameObject.transform.Translate(Heading * this.Traits[2] / 35f, Space.World);
         if (r.Next(10) < 4)
         {
