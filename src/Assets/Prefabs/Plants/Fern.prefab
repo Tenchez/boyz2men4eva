@@ -73,6 +73,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &33780914684794510
 MeshFilter:
@@ -89,12 +90,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1836784791856574}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e704bf2ea43a2944859aef6cd37dbbe, type: 3}
+  m_Script: {fileID: 11500000, guid: 52279b00f16cd8c43a7a85c2424ba80b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AC: {fileID: 0}
-  PC: {fileID: 0}
-  Traits: 00000000
+  Energy: 0
+  Traits: 00000000000000000000000000000000000000000000000000000000
+  SpeciesName: Fern
 --- !u!135 &135205453034898218
 SphereCollider:
   m_ObjectHideFlags: 1
