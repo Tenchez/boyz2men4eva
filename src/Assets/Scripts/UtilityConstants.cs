@@ -5,4 +5,6 @@ using UnityEngine;
 public static class UtilityConstants
 {
     public static readonly float INTERACT_RANGE = .3f;
+
+    public static readonly int FRAMES_TILL_RELAX = 3;
 }

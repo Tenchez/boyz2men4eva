@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class Animal : Living {
 
     // If you are chasing, whether it is a food or a plant, we alias it here to keep track of?
     public GameObject target;
+    public GameObject mate;
+    public GameObject pursuer;
 
     // The array that is it's statline, an array of ints for ease of mutation
     // Sise, Strength, Speed, Age, Diet
@@ -19,6 +22,9 @@ public class Animal : Living {
 
     //fully rested
     private readonly int EXHAUSTION_THRESHOLD = 50;
+
+    //underfed
+    private readonly int ENERGY_DANGER_LEVEL = 150;
 
     //fully healed
     private readonly int HEALTH_THRESHOLD = 50;
@@ -36,8 +42,6 @@ public class Animal : Living {
     public int Health { get; set; }
     public int Exhaustion { get; set; }
     public new int Energy { get; set; }
-    public bool Alive { get; set; }
-    public bool Asleep { get; set; }
     // public int Thirst;
     // public bool CanSwim;
 
@@ -48,7 +52,6 @@ public class Animal : Living {
     public float sightRadius { get; set; }
     public States State;
     
-    #region LivingMethods
     // Use this for initialization
     public override void Start()
     {
@@ -56,33 +59,32 @@ public class Animal : Living {
         SEC = GameObject.Find("_SimulationEntityController").GetComponent<SimulationEntityController>();
         SEC.Animals.Add(this.gameObject);
         Heading = new Vector3(1, 1, 0);
-        Alive = true;
-        //Exhaustion = EXHAUSTION_THRESHOLD;
+
+        //initial value
+        Energy = EXHAUSTION_THRESHOLD * 10;
+
+        Exhaustion = EXHAUSTION_THRESHOLD;
         Health = HEALTH_THRESHOLD;
-        //EnergyChangeFactorStandard = Traits[0];
+        EnergyChangeFactorStandard = Traits[0];
     }
 
     // Update is called once per frame
     public override void Update()
     {
-        if (Alive)
+        if (State != States.Dead)
         {
             //should this be called every time, every other time, every time seconds of datetime.now % 2 = 0??
             EnergyTick();
             HealthTick();
             ExhaustionTick();
-            Wander();
-            if (Health == 0)
-            {
-                Alive = false;
-            }
         }
         else
         {
             //dont alway remove - the carcass should remain in the simulation to be eaten
             if (Energy == 0)
             {
-                //remove this animal from simulation
+                SEC.Animals.Remove(this.transform.gameObject);
+                Destroy(this);
             }
         }
 
@@ -91,22 +93,165 @@ public class Animal : Living {
             case States.Sleeping:
                 break;
             case States.Grazing:
+                GameObject food = FindEdible();
+                if (food == null)
+                {
+                    Wander();
+                }
+                else
+                {
+                    target = food;
+                }
                 break;
             case States.Chasing:
+                MoveTowards(target.transform.position, 2);
+                if (target.GetComponentInChildren<ILiving>().getType() == "Animal")
+                {
+                    if (Vector3.Distance(target.gameObject.transform.position, this.gameObject.transform.position) < UtilityConstants.INTERACT_RANGE)
+                    {
+                        AttackTarget(target);
+                    }
+                }
                 break;
             case States.Eating:
+                Consume();
+                if (target.GetComponentInChildren<Living>().Energy <= 0)
+                {
+                    target = null;
+                }
                 break;
             case States.Fleeing:
+                Flee(2);
                 break;
             case States.Dead:
                 break;
+            default:
+                throw new Exception("State not found: Animal.Update()");
         }
+
+        AdjustState();
+    }
+
+    public void AttackTarget(GameObject victim)
+    {
+        victim.GetComponentInChildren<Animal>().Health = 0;
+    }
+
+    public bool IsTargetWithinInteractRange()
+    {
+        bool within = false;
+
+        if (target != null)
+        {
+            within = Vector3.Distance(this.gameObject.transform.position, target.transform.position) <
+                     UtilityConstants.INTERACT_RANGE;
+        }
+        return within;
+    }
+
+    public bool IsTargetEdible()
+    {
+        bool targetIsEatable = false;
+
+        if (target != null)
+        {
+            if (target.GetComponentInChildren<ILiving>().getType() == "Plant")
+            {
+                targetIsEatable = true;
+            }
+            else if (target.GetComponentInChildren<ILiving>().getType() == "Animal")
+            {
+                targetIsEatable = target.GetComponentInChildren<Animal>().State == States.Dead;
+            }
+        }
+        return targetIsEatable;
+    }
+
+    public void AdjustState()
+    {
+        List<GameObject> nearbyThings = AllYouCanSee();
+        bool inEatingRange = IsTargetWithinInteractRange();
+        bool isEatable = IsTargetEdible();
+        if (State != States.Chasing) //or mating
+        {
+            target = null;
+        }
+        if (Health < 0 || Energy < 0)
+        {
+            State = States.Dead;
+        }
+        else if (SetPredatorIfExists(nearbyThings))
+        {
+            State = States.Fleeing;
+        }
+        else if (isEatable && inEatingRange && Energy <= 10000)
+        {
+            State = States.Eating;
+        }
+        else if (Exhaustion < 10 && State != States.Sleeping)
+        {
+            State = States.Sleeping;
+        }
+        else if (Exhaustion > EXHAUSTION_THRESHOLD && State == States.Sleeping)
+        {
+            State = States.Grazing;
+        }
+        else if (isEatable && inEatingRange)
+        {
+            State = States.Eating;
+        }
+        else if (target != null)
+        {
+            State = States.Chasing;
+        }
+        else if (State != States.Sleeping)
+        { 
+            State = States.Grazing;
+        }
+    }
+
+    public bool SetPredatorIfExists(List<GameObject> nearbyThings)
+    {
+        bool predatorExists = false;
+        GameObject closestPredator = null;
+        float closestPredDistance = Mathf.Infinity;
+        for (int i = 0; i < nearbyThings.Count; i++)
+        {
+            if (nearbyThings[i].GetComponentInChildren<ILiving>().getType() == "Animal")
+            {
+                if (nearbyThings[i].GetComponentInChildren<Animal>().Traits[1] > this.Traits[1])
+                {
+                    float currentDist = Vector3.Distance(closestPredator.transform.position, this.transform.position);
+                    if (closestPredator == null || currentDist < closestPredDistance)
+                    {
+                        predatorExists = true;
+                        closestPredator = nearbyThings[i];
+                        closestPredDistance = currentDist;
+                    }
+                }
+            }
+        }
+
+        if (closestPredator != null)
+        {
+            pursuer = closestPredator;
+        }
+
+        return predatorExists;
+    }
+
+    public void Flee(float pace)
+    {
+        Heading = -1 * (pursuer.transform.position - this.transform.position);
+        Heading.Normalize();
+        this.gameObject.transform.Translate(Heading * Traits[2] * pace / 50f, Space.World);
     }
 
     // Ca1lled to eat food (plants or animals)
     public override void Consume()
     {
-
+        this.Energy += target.GetComponentInChildren<Living>().Energy;
+        target.GetComponentInChildren<Living>().Energy = 0;
     }
 
     // Called to reproduce sexually
@@ -125,7 +270,6 @@ public class Animal : Living {
     {
         return "Animal";
     }
-    #endregion
 
     public void MoveTowards(Vector3 position, float pace)
     {
@@ -136,45 +280,38 @@ public class Animal : Living {
 
     public void HealthTick()
     {
-        if (Health <= 0)
-        {
-            Alive = false;
-        }
-        else if (Energy > HEALTH_THRESHOLD * (1/5)) // just some small value of health threshold.. i guess?
+        if (Health < HEALTH_THRESHOLD && Energy > ENERGY_DANGER_LEVEL*2) // just some small value of health threshold.. i guess?
         {
             Health += HealthChangeFactor;
             Energy -= EnergyChangeFactor;
+        }
+        else if (Energy < ENERGY_DANGER_LEVEL)
+        {
+            Health--;
         }
     }
 
     public void ExhaustionTick()
     {
-        if (!Asleep)
+        if (State != States.Sleeping)
         {
             Exhaustion--;
 
-            if (Exhaustion < 0)
-            {
-                //go to sleep
-                ChangeAsleep();
-            }
-        }
-        else if (Exhaustion > EXHAUSTION_THRESHOLD || ThreatInDetectionRange())
-        {
-            //wake up
-            ChangeAsleep();
+            sightRadius = normalDetectionRange;
+
+            EnergyChangeFactor = EnergyChangeFactorStandard;
+            HealthChangeFactor = HealthChangeFactorStandard;
         }
         else
         {
             //continue sleeping - placeholder
             Exhaustion++;
-        }
-    }
 
-    public bool ThreatInDetectionRange()
-    {
-        //to be Implemented
-        return false;
+            sightRadius = normalDetectionRange / 3;
+
+            EnergyChangeFactor = EnergyChangeFactorStandard / 2; //slow energy burn while asleep
+            HealthChangeFactor = HealthChangeFactorStandard * 2; //heal fast while asleep
+        }
     }
 
     #region movement
@@ -192,28 +329,6 @@ public class Animal : Living {
         }
     }
     #endregion
-
-    public void ChangeAsleep()
-    {
-        if (Asleep)
-        {
-            Asleep = false;
-
-            sightRadius = normalDetectionRange;
-
-            EnergyChangeFactor = EnergyChangeFactorStandard;
-            HealthChangeFactor = HealthChangeFactorStandard;
-        }
-        else
-        {
-            Asleep = true;
-
-            sightRadius = normalDetectionRange / 3;
-
-            EnergyChangeFactor = EnergyChangeFactorStandard / 2; //slow energy burn while asleep
-            HealthChangeFactor = HealthChangeFactorStandard * 2; //heal fast while asleep
-        }
-    }
 
     public bool CanSee(GameObject thing)
     {
@@ -318,4 +433,31 @@ public class Animal : Living {
         }
         return yes;
     }
+
+    //    private GameObject LocateMate()
+    //    {
+    //        GameObject CloseMate = null;
+    //
+    //        List<GameObject> NearByLivingThings = AllYouCanSee();
+    //
+    //        foreach (GameObject PotentialMate in NearByLivingThings)
+    //        {
+    //            if (IsSameSpecies(PotentialMate))
+    //            {
+    //                CloseMate = PotentialMate;
+    //            }
+    //        }
+    //
+    //        return CloseMate;
+    //    }
+    //
+    //    private void Mate()
+    //    {
+    //        if (Vector3.Distance(this.transform.position, mate.transform.position) < 5)
+    //        {
+    //            mate.GetComponentInChildren<Animal>().Energy /= 2;
+    //            Energy /= 2;
+    //            GC.Spawn("Squirrel", this.gameObject.transform.position.x, this.gameObject.transform.position.x);
+    //        }
+    //    }
 }
