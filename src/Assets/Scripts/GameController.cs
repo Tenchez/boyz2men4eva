@@ -26,8 +26,8 @@ public class GameController : MonoBehaviour {
             }
 		}
 
-        /*
-        for (int y = 0; y < 1; y++)
+        
+        for (int y = 0; y <3; y++)
         {
             for (int l = 0; l < 5; l++)
             {
@@ -35,11 +35,14 @@ public class GameController : MonoBehaviour {
             }
         }
         Spawn("Bear", 0, 0);
-        Spawn("Bear", -2, 2);*/
+        Spawn("Bear", -2, 2);
+	    Spawn("Bear", -2, -3);
 
-        Spawn("Squirrel", 0, 0);
-	    Spawn("Fern", 10, 10);
-	}
+        Spawn("Fern", 10, 10);
+	    Spawn("Fern", -10, 10);
+	    Spawn("Fern", 10, -10);
+	    Spawn("Fern", -10, -10);
+    }
 	
 	// Update is called once per frame
 	void Update () {

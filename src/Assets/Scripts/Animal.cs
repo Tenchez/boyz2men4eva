@@ -43,7 +43,7 @@ public class Animal : Living {
     //standard state change factors - for when doing nothing
     private int HealthChangeFactorStandard = 1;
     private int EnergyChangeFactorStandard;
-    private float normalDetectionRange = 3; //placeholder value - is this in pixels...?
+    private readonly float NORMAL_DETECTION_RANGE = 5; //placeholder value - is this in pixels...?
 
     // Values for live and health
     public int Health = 0;
@@ -70,7 +70,7 @@ public class Animal : Living {
         Energy = EXHAUSTION_THRESHOLD * 10;
 
         sightAngle = 180;
-        sightRadius = 20;
+        sightRadius = 5;
         EatSpeed = 5 * Traits[6];
         Exhaustion = EXHAUSTION_THRESHOLD;
         Health = HEALTH_THRESHOLD;
@@ -355,7 +355,7 @@ public class Animal : Living {
         {
             Exhaustion--;
 
-            sightRadius = normalDetectionRange;
+            sightRadius = NORMAL_DETECTION_RANGE;
 
             EnergyChangeFactor = EnergyChangeFactorStandard;
             HealthChangeFactor = HealthChangeFactorStandard;
@@ -365,7 +365,7 @@ public class Animal : Living {
             //continue sleeping - placeholder
             Exhaustion += 2;
 
-            sightRadius = normalDetectionRange / 3;
+            sightRadius = NORMAL_DETECTION_RANGE / 3;
 
             EnergyChangeFactor = EnergyChangeFactorStandard / 2; //slow energy burn while asleep
             HealthChangeFactor = HealthChangeFactorStandard * 2; //heal fast while asleep

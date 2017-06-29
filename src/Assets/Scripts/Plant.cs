@@ -7,7 +7,7 @@ using Random = System.Random;
 public class Plant : Living
 {
     //used for reproduction
-    private int ENERGY_THRESHOLD = 300;
+    private int ENERGY_THRESHOLD = 200;
 
     private static System.Random r = new Random();
 
