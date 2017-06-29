@@ -27,6 +27,11 @@ public class Animal : Living {
     //fully healed
     private readonly int HEALTH_THRESHOLD = 50;
 
+    //time until checking if followed
+    private int framesTillCheck = 50;
+
+    private readonly int FRAMES_TILL_CHECK_DEFAULT = 50;
+
     //used to change rates when sleeping or running etc
     private int HealthChangeFactor = 1;
     private int EnergyChangeFactor = 1;
@@ -62,6 +67,9 @@ public class Animal : Living {
 
         //initial value
         Energy = EXHAUSTION_THRESHOLD * 30;
+        Energy = EXHAUSTION_THRESHOLD * 50;
+
+        sightRadius = 360;
 
         Exhaustion = EXHAUSTION_THRESHOLD;
         Health = HEALTH_THRESHOLD;
@@ -103,6 +111,7 @@ public class Animal : Living {
                 }
                 else
                 {
+
                     target = food;
                 }
                 break;
@@ -125,6 +134,8 @@ public class Animal : Living {
                 break;
             case States.Fleeing:
                 Flee(2);
+                framesTillCheck--;
+
                 break;
             case States.Dead:
                 break;
@@ -183,9 +194,17 @@ public class Animal : Living {
         {
             State = States.Dead;
         }
-        else if (Energy > ENERGY_DANGER_LEVEL*4 && ((mate = LocateMate()) != null))
+        else if (Energy > ENERGY_DANGER_LEVEL * 4 && ((mate = LocateMate()) != null))
         {
             State = States.Mating;
+        }
+        else if (State == States.Fleeing && framesTillCheck <= 0)
+        {
+            Heading = pursuer.transform.position - this.transform.position;
+            Heading.Normalize();
+
+            State = States.Grazing;
+            framesTillCheck = FRAMES_TILL_CHECK_DEFAULT;
         }
         else if (SetPredatorIfExists(nearbyThings))
         {
@@ -213,6 +232,7 @@ public class Animal : Living {
         }
         else if (State != States.Sleeping)
         { 
+        {
             State = States.Grazing;
         }
     }
@@ -228,7 +248,7 @@ public class Animal : Living {
             {
                 if (nearbyThings[i].GetComponentInChildren<Animal>().Traits[1] > this.Traits[1])
                 {
-                    float currentDist = Vector3.Distance(closestPredator.transform.position, this.transform.position);
+                    float currentDist = Vector3.Distance(nearbyThings[i].transform.position, this.transform.position);
                     if (closestPredator == null || currentDist < closestPredDistance)
                     {
                         predatorExists = true;
@@ -347,7 +367,7 @@ public class Animal : Living {
     public bool CanSee(GameObject thing)
     {
         bool IsSeen = false;
-        if (Vector2.Distance(thing.transform.position, this.gameObject.transform.position) < sightRadius && (Vector3.Angle(Heading, (thing.transform.position - this.gameObject.transform.position)) < sightAngle))
+        if (Vector2.Distance(thing.transform.position, this.gameObject.transform.position) < sightRadius /*&& (Vector3.Angle(Heading, (thing.transform.position - this.gameObject.transform.position)) < sightAngle)*/)
         {
             IsSeen = true;
         }
