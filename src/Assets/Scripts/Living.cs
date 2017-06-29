@@ -5,7 +5,7 @@ public abstract class Living : MonoBehaviour, ILiving
 {
     public int Energy;
 
-    public int[] Traits = new int[5];
+    public int[] Traits = new int[6];
 
     public string SpeciesName;
 
@@ -29,7 +29,7 @@ public abstract class Living : MonoBehaviour, ILiving
 
         bool same;
 
-        if (creature.getType() == getType())
+        if (creature.getType() != getType())
         {
             same = false;
         }

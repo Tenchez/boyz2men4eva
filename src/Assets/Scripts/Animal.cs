@@ -32,6 +32,8 @@ public class Animal : Living {
 
     private readonly int FRAMES_TILL_CHECK_DEFAULT = 50;
 
+    private int framesTillAttemptMate = 1000;
+
     //used to change rates when sleeping or running etc
     private int HealthChangeFactor = 1;
     private int EnergyChangeFactor = 1;
@@ -44,7 +46,7 @@ public class Animal : Living {
     // Values for live and health
     public int Health { get; set; }
     public int Exhaustion { get; set; }
-    public new int Energy { get; set; }
+    //public new int Energy { get; set; }
     // public int Thirst;
     // public bool CanSwim;
 
@@ -82,6 +84,11 @@ public class Animal : Living {
             EnergyTick();
             HealthTick();
             ExhaustionTick();
+
+            if (framesTillAttemptMate > 0)
+            {
+                framesTillAttemptMate--;
+            }
         }
         else
         {
@@ -97,6 +104,7 @@ public class Animal : Living {
         {
             case States.Mating:
                 MoveTowards(mate.transform.position, 3);
+                Mate();
                 break;
             case States.Sleeping:
                 break;
@@ -191,10 +199,6 @@ public class Animal : Living {
         {
             State = States.Dead;
         }
-        else if (Energy > ENERGY_DANGER_LEVEL * 4 && ((mate = LocateMate()) != null))
-        {
-            State = States.Mating;
-        }
         else if (State == States.Fleeing && framesTillCheck <= 0)
         {
             Heading = pursuer.transform.position - this.transform.position;
@@ -207,7 +211,7 @@ public class Animal : Living {
         {
             State = States.Fleeing;
         }
-        else if (isEatable && inEatingRange && Energy <= 10000)
+        else if (isEatable && inEatingRange && Energy <= 2000)
         {
             State = States.Eating;
         }
@@ -218,6 +222,10 @@ public class Animal : Living {
         else if (Exhaustion > EXHAUSTION_THRESHOLD && State == States.Sleeping)
         {
             State = States.Grazing;
+        }
+        else if (framesTillAttemptMate <= 0 && Energy > ENERGY_DANGER_LEVEL * 4 && ((mate = LocateMate()) != null))
+        {
+            State = States.Mating;
         }
         else if (isEatable && inEatingRange)
         {
@@ -472,7 +480,8 @@ public class Animal : Living {
 
         foreach (GameObject PotentialMate in NearByLivingThings)
         {
-            if (IsSameSpecies(PotentialMate.GetComponentInChildren<ILiving>()))
+            if (framesTillAttemptMate <= 0 && getType() == PotentialMate.GetComponentInChildren<ILiving>().getType() && IsSameSpecies(PotentialMate.GetComponentInChildren<ILiving>()) && 
+                PotentialMate.GetComponentInChildren<Animal>().State != States.Dead && PotentialMate != this)
             {
                 CloseMate = PotentialMate;
             }
@@ -483,12 +492,16 @@ public class Animal : Living {
 
     private void Mate()
     {
-        if (Vector3.Distance(this.transform.position, mate.transform.position) < UtilityConstants.INTERACT_RANGE)
-        {
-            mate.GetComponentInChildren<Animal>().Energy /= 2;
-            Energy /= 2;
-            GC.Spawn(SpeciesName, this.gameObject.transform.position.x, this.gameObject.transform.position.y);
-            State = States.Grazing;
-        }
+            if (Vector3.Distance(this.transform.position, mate.transform.position) < UtilityConstants.INTERACT_RANGE)
+            {
+                mate.GetComponentInChildren<Animal>().Energy /= 2;
+                Energy /= 2;
+                GC.Spawn(SpeciesName, this.gameObject.transform.position.x, this.gameObject.transform.position.y);
+                State = States.Grazing;
+
+                //resetting framesTillAttemptMate
+                framesTillAttemptMate = 25 * Traits[5];
+            }
+
     }
 }
