@@ -4,8 +4,8 @@ using System.Collections;
 public abstract class Living : MonoBehaviour, ILiving
 {
     public int Energy;
-
-    public int[] Traits = new int[6];
+    
+    public int[] Traits = new int[7];
 
     public string SpeciesName;
 
