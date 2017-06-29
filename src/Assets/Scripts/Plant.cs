@@ -9,6 +9,7 @@ public class Plant : Living
 
     //GameObjects
     SimulationEntityController SEC;
+    GameController GC;
 
     // The array that is it's statline, an array of ints for ease of mutation
     // RegrowthRate
@@ -78,10 +79,7 @@ public class Plant : Living
     public override void Reproduce()
     {
         Energy /= 2;
-        //Plant pl = new Plant();
-        //copy this plant to new
-        //pl.Energy = (Energy / 2); // 1/4 of original energy, thus 1/4 of energy is expended in reproduction
-        //PC.Plants.Add(pl.gameObject);
+        GC.Spawn(SpeciesName, this.gameObject.transform.position.x+2, this.gameObject.transform.position.y+2);
     }
 
     public override void EnergyTick()
