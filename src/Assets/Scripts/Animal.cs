@@ -285,7 +285,7 @@ public class Animal : Living {
     {
         Heading = -1 * (pursuer.transform.position - this.transform.position);
         Heading.Normalize();
-        this.gameObject.transform.Translate(Heading * Traits[2] * pace / 50f, Space.World);
+        this.gameObject.transform.Translate(Heading * getCurrentSpeed() * pace / 50f, Space.World);
     }
 
     // Ca1lled to eat food (plants or animals)
@@ -324,7 +324,7 @@ public class Animal : Living {
     {
         Heading = position - this.transform.position;
         Heading.Normalize();
-        this.gameObject.transform.Translate(Heading * Traits[2] * pace / 50f, Space.World);
+        this.gameObject.transform.Translate(Heading * getCurrentSpeed() * pace / 50f, Space.World);
     }
 
     public void HealthTick()
@@ -367,7 +367,7 @@ public class Animal : Living {
     public void Wander()
     {
         //walks the way it is looking
-        this.gameObject.transform.Translate(Heading * this.Traits[2] / 35f, Space.World);
+        gameObject.transform.Translate(Heading * getCurrentSpeed() / 35f, Space.World);
         if (r.Next(10) < 4)
         {
             for(int j = 0; j < 3; j++)
@@ -375,6 +375,7 @@ public class Animal : Living {
                 Turn(r.Next(2));
             }
         }
+
         if (r.Next(400)<2)
         {
             TurnAround();
@@ -393,7 +394,7 @@ public class Animal : Living {
     public bool CanSee(GameObject thing)
     {
         bool IsSeen = false;
-        if (Vector2.Distance(thing.transform.position, this.gameObject.transform.position) < sightRadius /*&& (Vector3.Angle(Heading, (thing.transform.position - this.gameObject.transform.position)) < sightAngle)*/)
+        if (Vector2.Distance(thing.transform.position, gameObject.transform.position) < sightRadius /*&& (Vector3.Angle(Heading, (thing.transform.position - this.gameObject.transform.position)) < sightAngle)*/)
         {
             IsSeen = true;
         }
@@ -407,7 +408,7 @@ public class Animal : Living {
 
         foreach (GameObject LivingThing in SEC.AllLiving)
         {
-            if (CanSee(LivingThing) && LivingThing != this.gameObject)
+            if (CanSee(LivingThing) && LivingThing != gameObject)
             {
                 InSight.Add(LivingThing);
             }
@@ -514,17 +515,29 @@ public class Animal : Living {
 
     private void Mate()
     {
-            if (Vector3.Distance(this.transform.position, mate.transform.position) < UtilityConstants.INTERACT_RANGE)
-            {
-                mate.GetComponentInChildren<Animal>().Energy /= 2;
-                Energy /= 2;
-                GC.Spawn(SpeciesName, this.gameObject.transform.position.x, this.gameObject.transform.position.y);
-                State = States.Grazing;
+        if (Vector3.Distance(this.transform.position, mate.transform.position) < UtilityConstants.INTERACT_RANGE)
+        {
+            mate.GetComponentInChildren<Animal>().Energy /= 2;
+            Energy /= 2;
+            GC.Spawn(SpeciesName, this.gameObject.transform.position.x, this.gameObject.transform.position.y);
+            State = States.Grazing;
 
-                //resetting framesTillAttemptMate
-                framesTillAttemptMate = 25 * Traits[5];
-            }
+            //resetting framesTillAttemptMate
+            framesTillAttemptMate = 25 * Traits[5];
+        }
 
+    }
+
+    private int getCurrentSpeed()
+    {
+        int toReturn = Traits[2];
+
+        if (Exhaustion < 0)
+        {
+            toReturn /= 2;
+        }
+
+        return toReturn;
     }
 
     private void TurnAround()
