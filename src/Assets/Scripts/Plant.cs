@@ -13,7 +13,6 @@ public class Plant : Living
 
     // The array that is it's statline, an array of ints for ease of mutation
     // RegrowthRate
-    public new int[] Traits = new int[1];
 
     public new int Energy { get; set; }
 
