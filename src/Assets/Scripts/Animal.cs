@@ -107,7 +107,7 @@ public class Animal : Living {
         {
             case States.Mating:
                 MoveTowards(mate.transform.position, 3);
-                Mate();
+                Reproduce();
                 break;
             case States.Sleeping:
                 break;
@@ -306,7 +306,16 @@ public class Animal : Living {
     // Called to reproduce sexually
     public override void Reproduce()
     {
+        if (Vector3.Distance(transform.position, mate.transform.position) < UtilityConstants.INTERACT_RANGE)
+        {
+            mate.GetComponentInChildren<Animal>().Energy /= 2;
+            Energy /= 2;
+            GC.Spawn(SpeciesName, this.gameObject.transform.position.x, this.gameObject.transform.position.y);
+            State = States.Grazing;
 
+            //resetting framesTillAttemptMate
+            framesTillAttemptMate = 25 * Traits[5];
+        }
     }
 
     public override void EnergyTick()
@@ -511,21 +520,6 @@ public class Animal : Living {
         }
 
         return CloseMate;
-    }
-
-    private void Mate()
-    {
-        if (Vector3.Distance(this.transform.position, mate.transform.position) < UtilityConstants.INTERACT_RANGE)
-        {
-            mate.GetComponentInChildren<Animal>().Energy /= 2;
-            Energy /= 2;
-            GC.Spawn(SpeciesName, this.gameObject.transform.position.x, this.gameObject.transform.position.y);
-            State = States.Grazing;
-
-            //resetting framesTillAttemptMate
-            framesTillAttemptMate = 25 * Traits[5];
-        }
-
     }
 
     private int getCurrentSpeed()
