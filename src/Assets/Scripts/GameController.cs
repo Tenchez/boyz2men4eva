@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
-	public int HEIGHT = 30;
+	public int HEIGHT = 120;
     public Transform Squirrel;
     public Transform Bear;
-    public int WIDTH = 50;
+    public int WIDTH = 150;
 	float BLOCK_SIZE = 1.0f;
 
 	// Use this for initialization
@@ -32,6 +32,7 @@ public class GameController : MonoBehaviour {
             }
         }
         Spawn("Bear", 0, 0);
+        Spawn("Bear", -2, 2);
     }
 	
 	// Update is called once per frame

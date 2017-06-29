@@ -43,9 +43,9 @@ public class Animal : Living {
     private int HealthChangeFactorStandard = 1;
     private int EnergyChangeFactorStandard;
     private float normalDetectionRange = 3; //placeholder value - is this in pixels...?
-    
+
     // Values for live and health
-    public int Health { get; set; }
+    public int Health = 0;
     public int Exhaustion { get; set; }
     //public new int Energy { get; set; }
     // public int Thirst;
@@ -69,8 +69,8 @@ public class Animal : Living {
         //initial value
         Energy = EXHAUSTION_THRESHOLD * 10;
 
-        sightRadius = 360;
-
+        sightAngle = 180;
+        sightRadius = 10;
         Exhaustion = EXHAUSTION_THRESHOLD;
         Health = HEALTH_THRESHOLD;
         EnergyChangeFactorStandard = Traits[0];
@@ -97,8 +97,8 @@ public class Animal : Living {
             if (Energy <= 0)
             {
                 SEC.remove(this);
-                Destroy(this);
                 Destroy(this.gameObject);
+                Destroy(this);
             }
         }
 
@@ -124,6 +124,10 @@ public class Animal : Living {
                 }
                 break;
             case States.Chasing:
+                if(target == null)
+                {
+                    break;
+                }
                 MoveTowards(target.transform.position, 2);
                 if (target.GetComponentInChildren<ILiving>().getType() == "Animal")
                 {
@@ -363,11 +367,15 @@ public class Animal : Living {
                 Turn(r.Next(2));
             }
         }
-        if (OutsideBounderies(((this.gameObject.transform.position + ((Quaternion.AngleAxis(sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).x), ((this.gameObject.transform.position + ((Quaternion.AngleAxis(sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).y)))
+        if (r.Next(400)<2)
+        {
+            TurnAround();
+        }
+        if (OutsideBounderies(((this.gameObject.transform.position + ((Quaternion.AngleAxis(sightAngle / 2, Vector3.forward) * Heading) * 3)).x), ((this.gameObject.transform.position + ((Quaternion.AngleAxis(sightAngle / 2, Vector3.forward) * Heading) * 3)).y)))
         {
             Turn(0);
         }
-        else if (OutsideBounderies(((this.gameObject.transform.position + ((Quaternion.AngleAxis(-sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).x), ((this.gameObject.transform.position + ((Quaternion.AngleAxis(-sightAngle / 2, Vector3.forward) * Heading) * sightRadius)).y)))
+        else if (OutsideBounderies(((this.gameObject.transform.position + ((Quaternion.AngleAxis(-sightAngle / 2, Vector3.forward) * Heading) * 3)).x), ((this.gameObject.transform.position + ((Quaternion.AngleAxis(-sightAngle / 2, Vector3.forward) * Heading) * 3)).y)))
         {
             Turn(1);
         }
@@ -431,7 +439,7 @@ public class Animal : Living {
 
         foreach (GameObject food in InSight)
         {
-            if (Desired == "Both" || food.GetComponentInChildren<ILiving>().getType() == Desired)
+            if (!food.GetComponentInChildren<ILiving>().IsSameSpecies(this.GetComponentInChildren<ILiving>()) && (Desired == "Both" || food.GetComponentInChildren<ILiving>().getType() == Desired))
             {
                 InSightAndEdible.Add(food);
             }
@@ -471,7 +479,7 @@ public class Animal : Living {
     private bool OutsideBounderies(float x, float y)
     {
         bool yes = false;
-        if (x > ((GC.WIDTH - 3) / 2) || x < (-(GC.WIDTH + 3) / 2) || y > ((GC.HEIGHT - 3) / 2) || y < (-(GC.HEIGHT + 3) / 2))
+        if (x > ((GC.WIDTH - 5) / 2) || x < (-(GC.WIDTH + 5) / 2) || y > ((GC.HEIGHT - 5) / 2) || y < (-(GC.HEIGHT + 5) / 2))
         {
             yes = true;
         }
@@ -509,5 +517,10 @@ public class Animal : Living {
                 framesTillAttemptMate = 25 * Traits[5];
             }
 
+    }
+
+    private void TurnAround()
+    {
+        Heading = Heading * -1;
     }
 }
