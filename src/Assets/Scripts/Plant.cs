@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
 
 public class Plant : Living
 {
     //used for reproduction
-    private int ENERGY_THRESHOLD = 100;
+    private int ENERGY_THRESHOLD = 300;
+
+    private static System.Random r = new Random();
 
     //GameObjects
     SimulationEntityController SEC;
@@ -14,14 +18,14 @@ public class Plant : Living
     // The array that is it's statline, an array of ints for ease of mutation
     // RegrowthRate
 
-    public new int Energy { get; set; }
-
     // Use this for initialization
     public override void Start()
     {
         SEC = GameObject.Find("_SimulationEntityController").GetComponent<SimulationEntityController>();
         SEC.Plants.Add(gameObject);
         GC = GameObject.Find("_GameController").GetComponent<GameController>();
+
+        Energy = 10;
     }
 
     // Update is called once per frame
@@ -78,8 +82,14 @@ public class Plant : Living
     // Probably just appearing next to the original
     public override void Reproduce()
     {
+        int modX = r.Next(11);
+        int modY = r.Next(11);
+
+        modX -= 5;
+        modY -= 5;
+
         Energy /= 2;
-        GC.Spawn(SpeciesName, this.gameObject.transform.position.x+2, this.gameObject.transform.position.y+2);
+        GC.Spawn(SpeciesName, this.gameObject.transform.position.x+modX, this.gameObject.transform.position.y+modY);
     }
 
     public override void EnergyTick()
