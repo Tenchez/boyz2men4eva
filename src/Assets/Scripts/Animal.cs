@@ -70,7 +70,7 @@ public class Animal : Living {
         Energy = EXHAUSTION_THRESHOLD * 10;
 
         sightAngle = 180;
-        sightRadius = 10;
+        sightRadius = 20;
         EatSpeed = 5 * Traits[6];
         Exhaustion = EXHAUSTION_THRESHOLD;
         Health = HEALTH_THRESHOLD;
@@ -394,7 +394,7 @@ public class Animal : Living {
     public bool CanSee(GameObject thing)
     {
         bool IsSeen = false;
-        if (Vector2.Distance(thing.transform.position, gameObject.transform.position) < sightRadius /*&& (Vector3.Angle(Heading, (thing.transform.position - this.gameObject.transform.position)) < sightAngle)*/)
+        if (Vector2.Distance(thing.transform.position, gameObject.transform.position) < sightRadius && (Vector3.Angle(Heading, (thing.transform.position - this.gameObject.transform.position)) < sightAngle))
         {
             IsSeen = true;
         }
