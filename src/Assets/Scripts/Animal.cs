@@ -45,8 +45,6 @@ public class Animal : Living {
     public int Health { get; set; }
     public int Exhaustion { get; set; }
     public new int Energy { get; set; }
-    public bool Alive { get; set; }
-    public bool Asleep { get; set; }
     // public int Thirst;
     // public bool CanSwim;
 
@@ -66,7 +64,6 @@ public class Animal : Living {
         Heading = new Vector3(1, 1, 0);
 
         //initial value
-        Energy = EXHAUSTION_THRESHOLD * 30;
         Energy = EXHAUSTION_THRESHOLD * 50;
 
         sightRadius = 360;
@@ -231,7 +228,6 @@ public class Animal : Living {
             State = States.Chasing;
         }
         else if (State != States.Sleeping)
-        { 
         {
             State = States.Grazing;
         }
