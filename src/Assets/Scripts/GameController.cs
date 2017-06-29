@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour {
 	public int HEIGHT = 120;
     public Transform Squirrel;
     public Transform Bear;
+    public Transform Fern;
     public int WIDTH = 150;
 	float BLOCK_SIZE = 1.0f;
 
@@ -47,6 +48,9 @@ public class GameController : MonoBehaviour {
                 Instantiate(Squirrel, new Vector3(x, y, -0.1f), Quaternion.identity);
                 break;
             case "Bear":
+                Instantiate(Bear, new Vector3(x, y, -0.1f), Quaternion.identity);
+                break;
+            case "Fern":
                 Instantiate(Bear, new Vector3(x, y, -0.1f), Quaternion.identity);
                 break;
             default:
