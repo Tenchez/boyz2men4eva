@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour {
                 Spawn("Squirrel", l, y);
             }
         }
-        Spawn("Bear", 10, 10);
+        Spawn("Bear", 0, 0);
     }
 	
 	// Update is called once per frame

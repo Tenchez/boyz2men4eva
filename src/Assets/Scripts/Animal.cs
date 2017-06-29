@@ -17,9 +17,11 @@ public class Animal : Living {
     // Size, Strength, Speed, Age, Diet
 
     //this is done because there will be no pre-fabs for predators
+    //public new string SpeciesName = "Predator";
 
     //fully rested
     private readonly int EXHAUSTION_THRESHOLD = 50;
+    private readonly int EXHAUSTION_THRESHOLD = 100;
 
     //underfed
     private readonly int ENERGY_DANGER_LEVEL = 150;
@@ -67,6 +69,7 @@ public class Animal : Living {
 
         //initial value
         Energy = EXHAUSTION_THRESHOLD * 50;
+        Energy = EXHAUSTION_THRESHOLD * 10;
 
         sightRadius = 360;
 
@@ -94,9 +97,12 @@ public class Animal : Living {
         {
             //dont alway remove - the carcass should remain in the simulation to be eaten
             if (Energy == 0)
+            if (Energy <= 0)
             {
                 SEC.Animals.Remove(this.transform.gameObject);
+                SEC.remove(this);
                 Destroy(this);
+                Destroy(this.gameObject);
             }
         }
 
@@ -118,6 +124,7 @@ public class Animal : Living {
                 {
 
                     target = food;
+                    State = States.Chasing;
                 }
                 break;
             case States.Chasing:
@@ -153,7 +160,6 @@ public class Animal : Living {
 
     public void AttackTarget(GameObject victim)
     {
-        victim.GetComponentInChildren<Animal>().Health = 0;
     }
 
     public bool IsTargetWithinInteractRange()
@@ -196,6 +202,7 @@ public class Animal : Living {
             target = null;
         }
         if (Health < 0 || Energy < 0)
+        if (Health <= 0 || Energy <= 0)
         {
             State = States.Dead;
         }
@@ -283,6 +290,10 @@ public class Animal : Living {
     {
         this.Energy += target.GetComponentInChildren<Living>().Energy;
         target.GetComponentInChildren<Living>().Energy = 0;
+        target.GetComponentInChildren<Living>().Energy = -30;
+        //SEC.remove(target.GetComponentInChildren<ILiving>());
+        //Destroy(target);
+        //Destroy(target.GetComponentInChildren<Living>());
     }
 
     // Called to reproduce sexually
@@ -337,6 +348,7 @@ public class Animal : Living {
         {
             //continue sleeping - placeholder
             Exhaustion++;
+            Exhaustion += 2;
 
             sightRadius = normalDetectionRange / 3;
 
@@ -386,6 +398,7 @@ public class Animal : Living {
         foreach (GameObject LivingThing in SEC.AllLiving)
         {
             if (CanSee(LivingThing))
+            if (CanSee(LivingThing) && LivingThing != this.gameObject)
             {
                 InSight.Add(LivingThing);
             }
