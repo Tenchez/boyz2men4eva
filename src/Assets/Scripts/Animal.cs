@@ -64,7 +64,7 @@ public class Animal : Living {
         Heading = new Vector3(1, 1, 0);
 
         //initial value
-        Energy = EXHAUSTION_THRESHOLD * 30;
+        Energy = EXHAUSTION_THRESHOLD * 10;
 
         Exhaustion = EXHAUSTION_THRESHOLD;
         Health = HEALTH_THRESHOLD;
