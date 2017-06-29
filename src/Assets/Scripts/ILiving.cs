@@ -15,5 +15,5 @@ public interface ILiving {
     //decrement energy depending on traits
     void EnergyTick();
 
-    bool isSameSpecies(ILiving other);
+    bool IsSameSpecies(ILiving other);
 }

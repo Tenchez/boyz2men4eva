@@ -19,7 +19,6 @@ public class Animal : Living {
     // Size, Strength, Speed, Age, Diet
 
     //this is done because there will be no pre-fabs for predators
-    public new string SpeciesName = "Predator";
 
     //fully rested
     private readonly int EXHAUSTION_THRESHOLD = 50;
@@ -444,30 +443,30 @@ public class Animal : Living {
         return yes;
     }
 
-    //    private GameObject LocateMate()
-    //    {
-    //        GameObject CloseMate = null;
-    //
-    //        List<GameObject> NearByLivingThings = AllYouCanSee();
-    //
-    //        foreach (GameObject PotentialMate in NearByLivingThings)
-    //        {
-    //            if (IsSameSpecies(PotentialMate))
-    //            {
-    //                CloseMate = PotentialMate;
-    //            }
-    //        }
-    //
-    //        return CloseMate;
-    //    }
-    //
-    //    private void Mate()
-    //    {
-    //        if (Vector3.Distance(this.transform.position, mate.transform.position) < 5)
-    //        {
-    //            mate.GetComponentInChildren<Animal>().Energy /= 2;
-    //            Energy /= 2;
-    //            GC.Spawn("Squirrel", this.gameObject.transform.position.x, this.gameObject.transform.position.x);
-    //        }
-    //    }
+    private GameObject LocateMate()
+    {
+        GameObject CloseMate = null;
+
+        List<GameObject> NearByLivingThings = AllYouCanSee();
+
+        foreach (GameObject PotentialMate in NearByLivingThings)
+        {
+            if (IsSameSpecies(PotentialMate.GetComponentInChildren<ILiving>()))
+            {
+                CloseMate = PotentialMate;
+            }
+        }
+
+        return CloseMate;
+    }
+
+    private void Mate()
+    {
+        if (Vector3.Distance(this.transform.position, mate.transform.position) < 5)
+        {
+            mate.GetComponentInChildren<Animal>().Energy /= 2;
+            Energy /= 2;
+            GC.Spawn("Squirrel", this.gameObject.transform.position.x, this.gameObject.transform.position.x);
+        }
+    }
 }
