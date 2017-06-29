@@ -51,10 +51,10 @@ public class Stats {
     public enum ReproduceRate
     {
         Infertile,
-        Slow,
-        Normal,
+        ExtremelyFast,
         Fast,
-        ExtremelyFast
+        Normal,
+        Slow
     }
     #endregion
 
@@ -65,6 +65,13 @@ public class Stats {
         Plants = 1,
         Anything,
         Animals
+    }
+
+    public enum ConsumeRate
+    {
+        Slow = 1,
+        Normal,
+        Fast
     }
     #endregion
 
