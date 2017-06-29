@@ -47,6 +47,15 @@ public class Stats {
         Senior,
         OlderThanDirt
     }
+
+    public enum ReproduceRate
+    {
+        Infertile,
+        Slow,
+        Normal,
+        Fast,
+        ExtremelyFast
+    }
     #endregion
 
     #region animal

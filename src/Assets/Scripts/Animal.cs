@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Animal : Living {
@@ -35,6 +33,8 @@ public class Animal : Living {
 
     private readonly int FRAMES_TILL_CHECK_DEFAULT = 50;
 
+    private int framesTillAttemptMate = 1000;
+
     //used to change rates when sleeping or running etc
     private int HealthChangeFactor = 1;
     private int EnergyChangeFactor = 1;
@@ -51,7 +51,7 @@ public class Animal : Living {
     // public int Thirst;
     // public bool CanSwim;
 
-    public enum States { Dead, Sleeping, Grazing, Fleeing, Chasing, Eating}
+    public enum States { Dead, Sleeping, Grazing, Fleeing, Chasing, Eating, Mating}
 
     Vector3 Heading { get; set; }
     public float sightAngle { get; set; }
@@ -87,6 +87,11 @@ public class Animal : Living {
             EnergyTick();
             HealthTick();
             ExhaustionTick();
+
+            if (framesTillAttemptMate > 0)
+            {
+                framesTillAttemptMate--;
+            }
         }
         else
         {
@@ -101,6 +106,10 @@ public class Animal : Living {
 
         switch (State)
         {
+            case States.Mating:
+                MoveTowards(mate.transform.position, 3);
+                Mate();
+                break;
             case States.Sleeping:
                 break;
             case States.Grazing:
@@ -209,7 +218,7 @@ public class Animal : Living {
         {
             State = States.Fleeing;
         }
-        else if (isEatable && inEatingRange && Energy <= 10000)
+        else if (isEatable && inEatingRange && Energy <= 2000)
         {
             State = States.Eating;
         }
@@ -221,6 +230,10 @@ public class Animal : Living {
         {
             State = States.Grazing;
         }
+        else if (framesTillAttemptMate <= 0 && Energy > ENERGY_DANGER_LEVEL && ((mate = LocateMate()) != null))
+        {
+            State = States.Mating;
+        }
         else if (isEatable && inEatingRange)
         {
             State = States.Eating;
@@ -230,7 +243,7 @@ public class Animal : Living {
             State = States.Chasing;
         }
         else if (State != States.Sleeping)
-        { 
+        {
             State = States.Grazing;
         }
     }
@@ -474,30 +487,36 @@ public class Animal : Living {
         return yes;
     }
 
-    //    private GameObject LocateMate()
-    //    {
-    //        GameObject CloseMate = null;
-    //
-    //        List<GameObject> NearByLivingThings = AllYouCanSee();
-    //
-    //        foreach (GameObject PotentialMate in NearByLivingThings)
-    //        {
-    //            if (IsSameSpecies(PotentialMate))
-    //            {
-    //                CloseMate = PotentialMate;
-    //            }
-    //        }
-    //
-    //        return CloseMate;
-    //    }
-    //
-    //    private void Mate()
-    //    {
-    //        if (Vector3.Distance(this.transform.position, mate.transform.position) < 5)
-    //        {
-    //            mate.GetComponentInChildren<Animal>().Energy /= 2;
-    //            Energy /= 2;
-    //            GC.Spawn("Squirrel", this.gameObject.transform.position.x, this.gameObject.transform.position.x);
-    //        }
-    //    }
+    private GameObject LocateMate()
+    {
+        GameObject CloseMate = null;
+
+        List<GameObject> NearByLivingThings = AllYouCanSee();
+
+        foreach (GameObject PotentialMate in NearByLivingThings)
+        {
+            if (framesTillAttemptMate <= 0 && getType() == PotentialMate.GetComponentInChildren<ILiving>().getType() && IsSameSpecies(PotentialMate.GetComponentInChildren<ILiving>()) && 
+                PotentialMate.GetComponentInChildren<Animal>().State != States.Dead && PotentialMate != this)
+            {
+                CloseMate = PotentialMate;
+            }
+        }
+
+        return CloseMate;
+    }
+
+    private void Mate()
+    {
+            if (Vector3.Distance(this.transform.position, mate.transform.position) < UtilityConstants.INTERACT_RANGE)
+            {
+                mate.GetComponentInChildren<Animal>().Energy /= 2;
+                Energy /= 2;
+                GC.Spawn(SpeciesName, this.gameObject.transform.position.x, this.gameObject.transform.position.y);
+                State = States.Grazing;
+
+                //resetting framesTillAttemptMate
+                framesTillAttemptMate = 25 * Traits[5];
+            }
+
+    }
 }

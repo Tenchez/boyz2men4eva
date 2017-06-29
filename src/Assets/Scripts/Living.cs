@@ -24,12 +24,14 @@ public abstract class Living : MonoBehaviour, ILiving
     public abstract void EnergyTick();
 
     public bool isSameSpecies(ILiving other)
+    public bool IsSameSpecies(ILiving other)
     {
         Living creature = (Living)other;
 
         bool same;
 
         if (creature.getType() == getType())
+        if (creature.getType() != getType())
         {
             same = false;
         }
