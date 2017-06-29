@@ -106,9 +106,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Energy: 0
-  Traits: 01000000030000000300000003000000010000000a000000
+  Traits: 01000000030000000300000003000000010000000a00000003000000
   SpeciesName: Squirrel
   target: {fileID: 0}
   mate: {fileID: 0}
   pursuer: {fileID: 0}
+  Health: 0
   State: 2

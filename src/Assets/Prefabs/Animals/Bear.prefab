@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Energy: 0
-  Traits: 03000000040000000200000003000000020000000a000000
+  Traits: 03000000040000000200000003000000020000000a00000003000000
   SpeciesName: Bear
   target: {fileID: 0}
   mate: {fileID: 0}
