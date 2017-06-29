@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Animal : Living {
@@ -47,7 +45,7 @@ public class Animal : Living {
     // public int Thirst;
     // public bool CanSwim;
 
-    public enum States { Dead, Sleeping, Grazing, Fleeing, Chasing, Eating}
+    public enum States { Dead, Sleeping, Grazing, Fleeing, Chasing, Eating, Mating}
 
     Vector3 Heading { get; set; }
     public float sightAngle { get; set; }
@@ -92,6 +90,9 @@ public class Animal : Living {
 
         switch (State)
         {
+            case States.Mating:
+                MoveTowards(mate.transform.position, 3);
+                break;
             case States.Sleeping:
                 break;
             case States.Grazing:
@@ -181,6 +182,10 @@ public class Animal : Living {
         if (Health < 0 || Energy < 0)
         {
             State = States.Dead;
+        }
+        else if (Energy > ENERGY_DANGER_LEVEL*4 && ((mate = LocateMate()) != null))
+        {
+            State = States.Mating;
         }
         else if (SetPredatorIfExists(nearbyThings))
         {
@@ -462,11 +467,12 @@ public class Animal : Living {
 
     private void Mate()
     {
-        if (Vector3.Distance(this.transform.position, mate.transform.position) < 5)
+        if (Vector3.Distance(this.transform.position, mate.transform.position) < UtilityConstants.INTERACT_RANGE)
         {
             mate.GetComponentInChildren<Animal>().Energy /= 2;
             Energy /= 2;
-            GC.Spawn("Squirrel", this.gameObject.transform.position.x, this.gameObject.transform.position.x);
+            GC.Spawn(SpeciesName, this.gameObject.transform.position.x, this.gameObject.transform.position.y);
+            State = States.Grazing;
         }
     }
 }

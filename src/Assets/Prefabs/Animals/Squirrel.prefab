@@ -106,6 +106,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Energy: 0
-  target: {fileID: 0}
   Traits: 0100000003000000030000000300000001000000
+  SpeciesName: Prey
+  target: {fileID: 0}
+  mate: {fileID: 0}
+  pursuer: {fileID: 0}
   State: 2
