@@ -4,7 +4,7 @@ using System.Collections;
 public abstract class Living : MonoBehaviour, ILiving
 {
     public int Energy;
-
+    
     public int[] Traits = new int[7];
 
     public string SpeciesName;
@@ -23,14 +23,12 @@ public abstract class Living : MonoBehaviour, ILiving
 
     public abstract void EnergyTick();
 
-    public bool isSameSpecies(ILiving other)
     public bool IsSameSpecies(ILiving other)
     {
         Living creature = (Living)other;
 
         bool same;
 
-        if (creature.getType() == getType())
         if (creature.getType() != getType())
         {
             same = false;
