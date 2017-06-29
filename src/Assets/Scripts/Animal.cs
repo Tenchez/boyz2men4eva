@@ -200,7 +200,7 @@ public class Animal : Living {
     {
         List<GameObject> nearbyThings = AllYouCanSee();
         bool inEatingRange = IsTargetWithinInteractRange();
-        bool isEatable = IsTargetEdible();
+        bool IsEdible = IsTargetEdible();
         if (State != States.Chasing && State != States.Eating) //or mating
         {
             target = null;
@@ -221,7 +221,7 @@ public class Animal : Living {
         {
             State = States.Fleeing;
         }
-        else if (isEatable && inEatingRange && Energy <= 2000)
+        else if (IsEdible && inEatingRange && Energy <= 2000)
         {
             State = States.Eating;
         }
@@ -237,7 +237,7 @@ public class Animal : Living {
         {
             State = States.Mating;
         }
-        else if (isEatable && inEatingRange)
+        else if (IsEdible && inEatingRange)
         {
             State = States.Eating;
         }
@@ -291,15 +291,18 @@ public class Animal : Living {
     // Ca1lled to eat food (plants or animals)
     public override void Consume()
     {
-        if (target.GetComponentInChildren<Living>().Energy < EatSpeed)
+        if (target != null)
         {
-            this.Energy += target.GetComponentInChildren<Living>().Energy;
-            target.GetComponentInChildren<Living>().Energy = 0;
-        }
-        else
-        {
-            this.Energy += EatSpeed;
-            target.GetComponentInChildren<Living>().Energy -= EatSpeed;
+            if (target.GetComponentInChildren<Living>().Energy < EatSpeed)
+            {
+                this.Energy += target.GetComponentInChildren<Living>().Energy;
+                target.GetComponentInChildren<Living>().Energy = 0;
+            }
+            else
+            {
+                this.Energy += EatSpeed;
+                target.GetComponentInChildren<Living>().Energy -= EatSpeed;
+            }
         }
     }
 
