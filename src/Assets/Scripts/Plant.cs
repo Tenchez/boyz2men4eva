@@ -88,7 +88,7 @@ public class Plant : Living
         modX -= 5;
         modY -= 5;
 
-        Energy /= 2;
+        Energy /= 3;
         GC.Spawn(SpeciesName, this.gameObject.transform.position.x+modX, this.gameObject.transform.position.y+modY);
     }
 
